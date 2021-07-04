@@ -1,0 +1,16 @@
+
+version: '3'
+
+services:
+  goglut:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/go/src/goglut
+    ports:
+    - 8080:8080
+    networks:
+      - goglut_network
+networks:
+  goglut_network:
