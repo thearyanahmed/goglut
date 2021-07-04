@@ -9,7 +9,6 @@ import (
 )
 
 func main()  {
-	fmt.Printf("[+] executing => \n%v\n",os.Args[2:])
 
 	switch os.Args[1] {
 	case "run":
@@ -36,13 +35,19 @@ func run () {
 }
 
 func child () {
-	fmt.Printf("running %v as pid %v \n",os.Args[2],os.Getpid())
+	fmt.Printf("running child process %v as pid %v \n",os.Args[2],os.Getpid())
+
+	must(syscall.Chroot("/home/rootfs"))
+	must(os.Chdir("/"))
+	must(syscall.Mount("proc","proc","proc",0,""))
 
 	cmd := exec.Command(os.Args[2],os.Args[3:]...)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stdin
 	cmd.Stdin = os.Stdin
+
+	fmt.Printf("will run %v\n",os.Args[3:])
 
 	must(cmd.Run())
 }
